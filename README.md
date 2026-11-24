@@ -1,71 +1,61 @@
-# Will the Customer Accept the Coupon?
+# Will the Customer Accept the Coupon? - EDA and Visualization Analysis
 
 ## Project Overview
+This project analyzes survey data from Amazon Mechanical Turk to determine what factors influence whether a driver will accept a coupon delivered to their cell phone while driving. The dataset contains various driving scenarios with contextual information such as destination, weather, time of day, and passenger type, and records whether the driver accepted the coupon (`Y = 1` for accepted, `Y = 0` for rejected).
 
-This project analyzes survey data from Amazon Mechanical Turk to determine what factors influence whether a driver will accept a coupon delivered to their cell phone while driving. The dataset contains various driving scenarios with contextual information such as destination, weather, time of day, and passenger type, and records whether the driver accepted the coupon.
+**Jupyter Notebook:** [`prompt_II.ipynb`](./prompt_II.ipynb)
 
-**Jupyter Notebook:** [prompt_II.ipynb](./prompt_II.ipynb)
+---
+
+## Data Cleaning & Preparation
+- **Missing Values:** Handled missing data in columns such as `car`, `Bar`, `CoffeeHouse`, `CarryAway`, `RestaurantLessThan20`, and `Restaurant20To50`.
+- **Filtering by Coupon Type:** Ensured that conditional acceptance analysis for specific coupon categories (such as Bar coupons or Coffee House coupons) is strictly filtered to recipients of that specific coupon type (`coupon == 'Bar'` or `coupon == 'CoffeeHouse'`).
 
 ---
 
 ## Key Findings
 
-### Overall Acceptance Rate
-- The overall coupon acceptance rate across all coupon types is approximately **56.8%**, meaning more than half of drivers in the survey accepted a coupon when offered one.
+### 1. Overall Acceptance Rate
+- The overall acceptance rate across all coupon types is **56.84%** (7,210 accepted out of 12,684 total coupon offers).
 
-### Bar Coupons — Deep Dive
+### 2. Bar Coupon Analysis (`coupon == 'Bar'`)
+- **Overall Bar Coupon Acceptance Rate:** **40.99%** (827 accepted out of 2,017 Bar coupons).
+- **Bar Visit Frequency:**
+  - Drivers who visit bars **more than 3 times a month** (`> 3`): **76.47%** acceptance rate (117 / 153).
+  - Remaining Bar coupon recipients (`<= 3` times a month): **38.09%** acceptance rate (710 / 1864).
+  - *Finding:* Frequent bar patrons are nearly twice as likely to accept a Bar coupon compared to infrequent or non-visitors.
+- **Age Factor (> 25 years old & > 1 bar visit/month):**
+  - Drivers who visit bars **more than once a month and are over 25**: **69.52%** acceptance rate (292 / 420).
+  - Remaining Bar coupon recipients: **33.50%** acceptance rate (535 / 1597).
+- **Passenger & Occupation Filter (`passanger != 'Kid(s)'`):**
+  - Drivers who visit bars **> 1 time/month, with non-kid passengers, and not in farming/fishing/forestry**: **70.18%** acceptance rate (393 / 560).
+  - Remaining Bar coupon recipients: **29.79%** acceptance rate (434 / 1457).
+- **Passenger & Marital Status Filter (`passanger != 'Kid(s)'` & `maritalStatus != 'Widowed'`):**
+  - Drivers who visit bars **> 1 time/month, with non-kid passengers, and not widowed**: **70.18%** acceptance rate (393 / 560).
+  - Remaining Bar coupon recipients: **29.79%** acceptance rate (434 / 1457).
+- **Younger Drivers vs Cheap Restaurant Goers:**
+  - Drivers visiting bars **> 1 time/month and under age 30**: **71.77%** acceptance rate (239 / 333).
+  - Drivers visiting bars **> 1 time/month, visiting cheap restaurants > 4 times/month, and earning < $50k**: **44.12%** acceptance rate (15 / 34).
 
-1. **Frequent bar-goers accept far more often**: Drivers who visit bars more than 3 times per month accepted bar coupons at a rate of ~**76%**, compared to ~**37%** for those who go 3 or fewer times per month.
-
-2. **Age matters**: Drivers over age 25 who visit bars more than once a month accepted bar coupons at roughly **69%**, compared to all others at ~**34%**.
-
-3. **Passengers & occupation**: Drivers who go to bars more than once a month, had no kid passengers, and were not in farming/fishing/forestry occupations showed an acceptance rate of ~**71%**.
-
-4. **Social context**: Drivers who go to bars more than once a month, had passengers that were not kids, and were not widowed showed ~**71%** acceptance.
-
-5. **Young social drivers**: Drivers under 30 who go to bars more than once a month showed ~**72%** acceptance.
-
-6. **Budget dining crossover**: Drivers who go to cheap restaurants more than 4 times a month and have income under $50K showed ~**46%** bar coupon acceptance.
-
-### Coffee House Coupons — Independent Investigation
-
-1. **Overall coffee house acceptance rate**: ~**50%** of drivers accepted coffee house coupons.
-
-2. **Frequent coffee house visitors**: Drivers who visit coffee houses 1–3 times per month show the highest acceptance rate at ~**65%**.
-
-3. **Time of day effect**: Coffee house coupons offered at **10AM** and **2PM** had significantly higher acceptance rates (~**63%**) compared to evening hours (~**44%**).
-
-4. **Destination impact**: Drivers with no urgent destination accepted coffee house coupons at ~**60%**, compared to ~**50%** for those heading home or to work.
-
-5. **Expiration time**: Coupons with a **1-day** expiration window were accepted more often (~**59%**) than 2-hour coupons (~**43%**).
-
----
-
-## Summary & Recommendations
-
-### Who is most likely to accept coupons?
-
-- **Bar coupons**: Target drivers who already visit bars frequently (3+ times/month), are under age 30, have adult passengers, and are not in farming/fishing occupations.
-- **Coffee house coupons**: Target drivers with no urgent destination, offer coupons in the morning/early afternoon, and give at least 1-day expiration windows.
-
-### Actionable Recommendations
-
-1. **Personalize coupon timing**: Deliver bar coupons in the evening and coffee house coupons in the morning/afternoon for best results.
-2. **Consider passenger context**: Drivers with adult passengers (friends, partners) are significantly more likely to accept social venue coupons.
-3. **Prioritize loyal customers**: Drivers who already frequent a venue type are far more likely to accept coupons for that same type — retargeting existing customers is highly effective.
-4. **Use longer expiration windows**: 1-day expiration coupons outperform 2-hour coupons; giving drivers more flexibility increases acceptance.
-5. **Avoid targeting commuters**: Drivers heading to work or with urgent destinations have lower acceptance rates — route-based targeting should focus on leisure trips.
+### 3. Coffee House Coupon Analysis (`coupon == 'CoffeeHouse'`)
+- **Overall Coffee House Acceptance Rate:** **49.92%** (1,995 accepted out of 3,996 Coffee House coupons).
+- **Coffee House Visit Frequency:**
+  - Drivers who visit Coffee Houses **more than once a month** (`1~3`, `4~8`, `gt8`): **65.93%** acceptance rate (1,097 / 1,664).
+  - Drivers who visit Coffee Houses **once or less a month** (`never`, `less1`): **38.14%** acceptance rate (868 / 2,276).
+  - *Finding:* Regular Coffee House visitors are significantly more likely (65.93% vs 38.14%) to accept Coffee House coupons.
+- **Time of Day Impact:**
+  - Morning (10 AM): **63.96%** acceptance rate (575 / 899).
+  - Early Afternoon (2 PM): **54.66%** acceptance rate (434 / 794).
+  - Morning & Early Afternoon Combined (10 AM & 2 PM): **59.60%** acceptance rate (1,009 / 1,693).
+  - Evening/Night (6 PM & 10 PM): **35.29%** acceptance rate (524 / 1,485).
+  - Early Morning (7 AM): **56.48%** acceptance rate (462 / 818).
+- **Passenger Context:**
+  - Drivers traveling with **Friends**: **59.69%** acceptance rate (727 / 1,218).
+  - Drivers traveling **Alone**: **47.68%** acceptance rate (1,006 / 2,110).
 
 ---
 
-## Dataset
+## Target Consumer Profiles & Recommendations
 
-The data is from the [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/603/in+vehicle+coupon+recommendation), collected via Amazon Mechanical Turk. It contains 12,684 records with 26 attributes describing driving scenarios and coupon acceptance.
-
-## Technologies Used
-
-- Python 3
-- pandas
-- matplotlib
-- seaborn
-- Jupyter Notebook
+1. **Bar Coupons:** Target drivers who already visit bars regularly (> 1-3 times/month), especially those over 25 without child passengers in the vehicle.
+2. **Coffee House Coupons:** Target morning/midday commuters (10 AM and 2 PM), drivers traveling with friends, and frequent coffee house visitors.
